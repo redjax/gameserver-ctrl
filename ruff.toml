@@ -1,0 +1,128 @@
+## Set assumed Python version
+target-version = "py311"
+
+## Same as Black.
+line-length = 88
+
+## Enable pycodestyle ("E") and Pyflakes ("F") codes by default
+#  # Docs: https://beta.ruff.rs/docs/rules/
+select = [
+    "D",    ## pydocstyle
+    "E",    ## pycodestyle
+    "I",    ## isort
+    "I001", ## Unused imports
+]
+
+## Ignore specific checks.
+#  Comment lines in list below to "un-ignore."
+#  This is counterintuitive, but commenting a
+#  line in ignore list will stop Ruff from
+#  ignoring that check. When the line is
+#  uncommented, the check will be run.
+ignore = [
+    "D100", ## missing-docstring-in-public-module
+    "D101", ## missing-docstring-in-public-class
+    "D102", ## missing-docstring-in-public-method
+    "D103", ## Missing docstring in public function
+    "D106", ## missing-docstring-in-public-nested-class
+    "D203", ## one-blank-line-before-class
+    "D213", ## multi-line-summary-second-line
+    "E501", ## Line too long
+    "E402", ## Module level import not at top of file
+]
+
+## Allow autofix for all enabled rules (when "--fix") is provided.
+#  NOTE: Leaving these commented until I know what they do
+#  Docs: https://beta.ruff.rs/docs/rules/
+fixable = [
+    # "A",  ## flake8-builtins
+    # "B",  ## flake8-bugbear
+    "C",
+    "D", ## pydocstyle
+    "E", ## pycodestyle-error
+    # "F",  ## pyflakes
+    # "G",  ## flake8-logging-format
+    "I", ## isort
+    "N", ## pep8-naming
+    # "Q",  ## flake8-quotas
+    # "S",  ## flake8-bandit
+    "T",
+    "W", ## pycodestyle-warning
+    # "ANN",  ## flake8-annotations
+    # "ARG",  ## flake8-unused-arguments
+    # "BLE",  ## flake8-blind-except
+    # "COM", ## flake8-commas
+    # "DJ",  ## flake8-django
+    # "DTZ",  ## flake8-datetimez
+    # "EM",  ## flake8-errmsg
+    "ERA", ## eradicate
+    # "EXE",  ## flake8-executables
+    # "FBT",  ## flake8-boolean-trap
+    # "ICN",  ## flake8-imort-conventions
+    # "INP",  ## flake8-no-pep420
+    # "ISC",  ## flake8-implicit-str-concat
+    # "NPY",  ## NumPy-specific rules
+    # "PD",  ## pandas-vet
+    # "PGH",  ## pygrep-hooks
+    # "PIE",  ## flake8-pie
+    "PL", ## pylint
+    # "PT",  ## flake8-pytest-style
+    # "PTH",  ## flake8-use-pathlib
+    # "PYI",  ## flake8-pyi
+    # "RET",  ## flake8-return
+    # "RSE",  ## flake8-raise
+    "RUF", ## ruf-specific rules
+    # "SIM",  ## flake8-simplify
+    # "SLF",  ## flake8-self
+    # "TCH",  ## flake8-type-checking
+    "TID", ## flake8-tidy-imports
+    "TRY", ## tryceratops
+    "UP",  ## pyupgrade
+    # "YTT"  ## flake8-2020
+]
+# unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "__pycache__",
+    "*.pyc",
+]
+
+[per-file-ignores]
+"__init__.py" = ["D104"]
+
+## Allow unused variables when underscore-prefixed.
+# dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[mccabe]
+max-complexity = 10
+
+[isort]
+combine-as-imports = true
+force-sort-within-sections = true
+force-wrap-aliases = true
+## Use a single line after each import block.
+lines-after-imports = 1
+## Use a single line between direct and from import
+lines-between-types = 1
+## Order imports by type, which is determined by case,
+#  in addition to alphabetically.
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+## Automatically add imports below to top of files
+required-imports = ["from __future__ import annotations"]
+## Define isort section priority
+section-order = [
+    "future",
+    "standard-library",
+    "first-party",
+    "local-folder",
+    "third-party",
+]

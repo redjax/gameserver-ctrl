@@ -1,0 +1,51 @@
+{#-
+    Template file for a Minecraft server container, using the itzg/minecraft-server image.
+
+    Items in {% raw %} {% endraw %} tags are note evaluated by Jinja. This is used to escape
+    Docker Compose's ${variable} syntax.
+
+    Some docker-compose vars have a Jinja |default(..., true) syntax, which sets a default value
+    if none is passed by the script that calls this template.
+-#}
+version: "{{ compose_ver|default(3.8, true) }}"
+
+volumes:
+  mc_forge: {% raw %}{}{% endraw %}
+
+services:
+
+  mc-server:
+    image: itzg/minecraft-server:{% raw %}${MC_SERV_IMAGE_TAG:-latest}{% endraw %}
+    container_name: {% raw %}${MC_SERV_CONTAINER_NAME:-mc-server_forge_example}{% endraw %}
+    restart: unless-stopped
+    ports:
+      - {% raw %}${MC_SERV_PORT:-25565}{% endraw %}:25565
+    tty: true
+    stdin_open: true
+    environment:
+      ## Accept EULA by default. Must be caps
+      EULA: "TRUE"
+      ## Default: FORGE
+      #  Options: {% raw %}(FORGE, FABRIC, QUILT, BUKKIT, SPIGOT, PAPER, PUFFERFISH, PURPUR, MAGMA, MOHIST, FTBA){% endraw %}
+      TYPE: {% raw %}${MC_SERV_TYPE:-FORGE}{% endraw %}
+      ## Default: LATEST
+      #  Options: {% raw %}(LATEST, SNAPSHOT, specific version, i.e. 1.7.9){% endraw %}
+      VERSION: {% raw %}${MC_SERV_VERSION:-LATEST}{% endraw %}
+      DEBUG: {% raw %}${MC_SERV_DEBUG:-true}{% endraw %}
+      WHITELIST_FILE: /extra/whitelist.json
+      WHITELIST_ENABLED: {% raw %}${MC_SERV_WHITELIST_ENABLE:-false}{% endraw %}
+      OVERRIDE_WHITELIST: true
+      MODRINTH_PROJECTS: {% raw %}${MC_SERV_MODRINTH_PROJECT_SLUGS}{% endraw %}
+    volumes:
+      ## Use a named volume for data
+      - mc_forge:/data
+      ## Mount local "data/mods" dir into container mods
+      - {% raw %}${MC_SERV_MODS_DIR:-./data/mods}{% endraw %}:/mods:ro
+      ## Mount container world dir to host
+      - {% raw %}${MC_SERV_WORLD_DIR:-./data/world}{% endraw %}:/data/world
+      - {% raw %}${MC_SERV_WHITELIST_FILE:-./whitelist.json}{% endraw %}:/extra/whitelist.json:ro
+    healthcheck:
+      test: mc-health
+      start_period: 1m
+      interval: 5s
+      retries: 20

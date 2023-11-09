@@ -1,0 +1,18 @@
+[default]
+
+env = "prod"
+container_env = false
+
+log_level = "INFO"
+
+game = "minecraft"
+
+[dev]
+
+env = "dev"
+
+log_level = "DEBUG"
+
+game = "minecraft"
+
+[prod]

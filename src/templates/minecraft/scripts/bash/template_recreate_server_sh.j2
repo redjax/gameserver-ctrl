@@ -1,0 +1,109 @@
+{% raw -%}
+#!/bin/bash
+
+######################################################################################
+# !!WARNING!!                                                                        #
+#                                                                                    #
+# This script is destructive. It completely deletes the container and volume(s),     #
+# including the host-mounted "world" dir.                                            #
+#                                                                                    #
+# Make a backup of the ./data/world directory if you do not want to lose your world. #
+######################################################################################
+
+## Use the name of the server's directory.
+#  i.e. if the server is located at the root's "servers/mc-forge1" path, use "mc-forge1"
+#    for the server name.
+{%- endraw %}
+SERVER_NAME="{{ server_obj.name|default("", true)}}"
+
+{% raw -%}
+if [[ $SERVER_NAME == "" ]]; then
+    # echo "[ERROR] Edit this script (recreate_server.sh) and enter the server directory's name, i.e. 'forge-serv', to continue."
+
+    # exit 1
+    read -p "[PROMPT] No server name detected. Enter server's name manually (i.e. example_forge_server): " SERVER_NAME
+fi
+{%- endraw %}
+
+{% raw -%}
+echo ""
+echo "[WARNING]: This will completely delete server: $SERVER_NAME."
+read -p "[PROMPT] Do you want to continue? (Y/N): " continue_choice
+{%- endraw %}
+
+{% raw -%}
+function destroy_server() {
+
+    echo "[INFO] Bringing [$SERVER_NAME] down"
+    docker compose down
+
+    echo "[INFO] Removing data volumes"
+    docker volume rm $SERVER_NAME"_mc_forge"
+    rm -r ./data/world
+
+    echo "[INFO] Destroyed: [$SERVER_NAME]"
+
+}
+{%- endraw %}
+
+{% raw -%}
+function recreate_server() {
+
+    echo "[INFO] Creating local world dir"
+    mkdir ./data/world
+
+    echo "[INFO] Recreating [$SERVER_NAME]"
+    docker compose up -d --force-recreate
+}
+{%- endraw %}
+
+{% raw -%}
+function monitor_server() {
+
+    echo "[INFO] Starting monitor of $SERVER_NAME"
+    docker compose logs -f
+
+}
+{%- endraw %}
+
+{% raw -%}
+case $continue_choice in
+"Y" | "y")
+    destroy_server
+    recreate_server
+
+    read -p "[PROMPT] Server recreated, do you want to monitor with docker-compose logs? (Y/N): " monitor_choice
+
+    case $monitor_choice in
+    "Y" | "y")
+        monitor_server
+
+        clear
+        echo "[INFO] Server monitor session disconnected, exiting script."
+
+        exit 0
+        ;;
+    "N" | "n")
+        echo "[INFO] Skipping monitor, exiting script."
+
+        exit 0
+        ;;
+    *)
+        echo "[ERROR] Invalid choice: $monitor_choice"
+
+        exit 1
+        ;;
+    esac
+    ;;
+"N" | "n")
+    echo "[INFO] Cancelling server recreate"
+
+    exit 0
+    ;;
+*)
+    echo "[ERROR] Invalid choice: $continue_choice"
+
+    exit 1
+    ;;
+esac
+{% endraw %}

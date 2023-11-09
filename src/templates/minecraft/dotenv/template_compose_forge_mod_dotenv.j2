@@ -1,0 +1,40 @@
+{#-
+    Template file for Minecraft server container's .env file.
+-#}
+
+## Default: latest
+#  https://github.com/itzg/docker-minecraft-server/blob/master/README.md#running-minecraft-server-on-different-java-version
+MC_SERV_IMAGE_TAG={{ env_data.img_tag|default("", true)}}
+
+## Default: mc-server_forge_example
+MC_SERV_CONTAINER_NAME={{ env_data.container_name|default("", true)}}
+
+## Default: 25565
+MC_SERV_PORT={{ env_data.server_port|default("", true)}}
+
+## Default: FORGE
+MC_SERV_TYPE={{ env_data.server_type|default("", true)}}
+
+## Default: LATEST
+MC_SERV_VERSION={{ env_data.server_ver|default("", true)}}
+
+## Default: true
+MC_SERV_DEBUG={{ env_data.server_debug|default("", true)}}
+
+## Default: false
+MC_SERV_WHITELIST_ENABLE={{ env_data.whitelist_enable|default("", true)}}
+
+## Default: ./
+MC_SERV_MODS_DIR={{ env_data.mods_dir|default("", true)}}
+
+## Default: ./whitelist.json
+MC_SERV_WHITELIST_FILE={{ env_data.whitelist_file|default("", true)}}
+
+## Default: false
+MC_SERV_WHITELIST_OVERRIDE={{ env_data.whitelist_override|default("", true)}}
+
+## URL slugs of Modrinth mods
+#  https://modrinth.com
+#    Use the last part of the URL below, i.e.
+#    https://modrinth.com/mod/journeymap --> journeymap
+MC_SERV_MODRINTH_PROJECT_SLUGS={{ env_data.project_slugs|default("", true)}}

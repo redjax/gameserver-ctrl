@@ -1,0 +1,17 @@
+{% raw %}[{% endraw %}
+{#- Loop over whitelist_players list if there are more than 1 player entity #}
+{%- if whitelist_players|length > 1 -%}
+  {% for player in whitelist_players %}
+    {% raw %}{{% endraw %}
+      "uuid": "{{ player.id}}",
+      "name": "{{ player.name}}"
+    {% raw %}}{% endraw %}{{ "," if not loop.last else "" }}
+  {%- endfor -%}
+  {# If there is only 1 player in the list, access it directly #}
+  {%- else %}
+    {% raw %}{{% endraw %}
+      "uuid": "{{ whitelist_players[0].id}}",
+      "name": "{{ whitelist_players[0].name}}"
+    {% raw %}}{% endraw %}
+  {%- endif %}
+{% raw %}]{% endraw %}
