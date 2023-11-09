@@ -1,27 +1,26 @@
+from __future__ import annotations
+
 import sys
 
 sys.path.append(".")
 
 from typing import Union
+from uuid import UUID, uuid4
 
-from loguru import logger as log
-from dynaconf import settings
-
-from red_utils.ext.loguru_utils import LoguruSinkStdOut, init_logger
+from gameserver_ctrl.constants import DATA_DIR, OUTPUT_DIR, TEMPLATES_DIR
 from gameserver_ctrl.core.config import app_settings
-from gameserver_ctrl.constants import OUTPUT_DIR, DATA_DIR, TEMPLATES_DIR
-
 from gameserver_ctrl.domain.minecraft import (
-    WhitelistPlayer,
-    WhitelistFile,
-    ForgeServerEnvFile,
-    ForgeServerEnvData,
     ForgeServerComposeFile,
+    ForgeServerEnvData,
+    ForgeServerEnvFile,
     MCForgeServer,
+    WhitelistFile,
+    WhitelistPlayer,
 )
 
-from uuid import uuid4, UUID
-
+from dynaconf import settings
+from loguru import logger as log
+from red_utils.ext.loguru_utils import LoguruSinkStdOut, init_logger
 
 def create_test_whitelist(create_player_count: int = 3) -> WhitelistFile:
     test_player_dicts: list[dict] = []

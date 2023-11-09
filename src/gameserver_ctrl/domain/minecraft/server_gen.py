@@ -1,16 +1,16 @@
-from pydantic import BaseModel, Field, validator, ValidationError
-from typing import Union
+from __future__ import annotations
 
-from uuid import UUID, uuid4
 from pathlib import Path
+from typing import Union
+from uuid import UUID, uuid4
 
-from loguru import logger as log
-
-from gameserver_ctrl.constants import DATA_DIR, TEMPLATES_DIR, OUTPUT_DIR
+from gameserver_ctrl.constants import DATA_DIR, OUTPUT_DIR, TEMPLATES_DIR
 from gameserver_ctrl.utils import jinja_utils
 
 ## Import jinja2 classes for typing & autocomplete
-from jinja2 import FileSystemLoader, Environment, Template
+from jinja2 import Environment, FileSystemLoader, Template
+from loguru import logger as log
+from pydantic import BaseModel, Field, ValidationError, validator
 
 mc_templates_dir: str = f"{TEMPLATES_DIR}/minecraft"
 mc_dotenv_dir: str = f"{mc_templates_dir}/dotenv"
@@ -21,13 +21,12 @@ mc_containers_dir: str = f"{mc_templates_dir}/server_containers"
 mc_filegen_output_dir: str = f"{OUTPUT_DIR}/minecraft/"
 
 from .schemas import (
-    ForgeServerEnvFile,
     ForgeServerComposeFile,
     ForgeServerEnvData,
+    ForgeServerEnvFile,
     WhitelistFile,
     WhitelistPlayer,
 )
-
 
 class MCForgeServer(BaseModel):
     """Class representation of a complete Dockerized Minecraft Forge server.
@@ -152,50 +151,42 @@ class RecreateServerScript(BaseModel):
 
     @property
     def template_path(self) -> str:
+        """Create path string to template_file.
         """
-        Create path string to template_file.
-        """
-
         _template_path = f"{self.template_dir}/{self.template_file}"
 
         return _template_path
 
     @property
     def template_loader(self) -> FileSystemLoader:
-        """
-        Return a jinja2.FileSystemLoader object for the template_dir.
+        """Return a jinja2.FileSystemLoader object for the template_dir.
 
         This loader is passed to the environment created in the
         template_env property.
         """
-
         _loader = jinja_utils.load_template_dir(f"{self.template_dir}")
 
         return _loader
 
     @property
     def template_env(self) -> Environment:
-        """
-        Return a jinja2.Environment object from the template_loader property.
+        """Return a jinja2.Environment object from the template_loader property.
 
         This environment can be used to create jinja2.Template objects. The environment
         prepares the .j2 template file for manipulation.
         """
-
         _env = jinja_utils.create_loader_env(_loader=self.template_loader)
 
         return _env
 
     @property
     def template(self) -> Template:
-        """
-        Return a jinja2.Template object.
+        """Return a jinja2.Template object.
 
         This template is used to create an output, i.e. with the .render()
         function. This render can then be exported to a file with
         WhitelistFile.render_to_file().
         """
-
         ## Check if the template_path exists
         if Path(self.template_path).exists():
             ## Create Template object
@@ -212,19 +203,15 @@ class RecreateServerScript(BaseModel):
 
     @property
     def template_render(self) -> str:
+        """Return a string of the rendered Template.
         """
-        Return a string of the rendered Template.
-        """
-
         _render = self.template.render(server_obj=self.server)
 
         return _render
 
     def render_to_file(self) -> None:
+        """Output rendered Template string to a file.
         """
-        Output rendered Template string to a file.
-        """
-
         try:
             jinja_utils.render_template_to_file(
                 _render=self.template_render, _outfile=self.output_file

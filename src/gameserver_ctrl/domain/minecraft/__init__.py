@@ -1,11 +1,11 @@
-from . import schemas, server_gen
+from __future__ import annotations
 
+from . import schemas, server_gen
 from .schemas import (
-    WhitelistFile,
-    WhitelistPlayer,
+    ForgeServerComposeFile,
     ForgeServerEnvData,
     ForgeServerEnvFile,
-    ForgeServerComposeFile,
+    WhitelistFile,
+    WhitelistPlayer,
 )
-
 from .server_gen import MCForgeServer

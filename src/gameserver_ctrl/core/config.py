@@ -1,10 +1,11 @@
-from typing import Union
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Union
 
 from dynaconf import settings
-from pydantic import BaseModel, Field, validator, ValidationError
 from loguru import logger as log
-
+from pydantic import BaseModel, Field, ValidationError, validator
 
 class AppSettings(BaseModel):
     env: str = Field(default=settings.ENV, env="ENV")

@@ -1,17 +1,16 @@
-from jinja2 import Template, FileSystemLoader, Environment
+from __future__ import annotations
+
 from typing import Optional
 
+from jinja2 import Environment, FileSystemLoader, Template
 from loguru import logger as log
 
-
 def load_template_dir(template_dir_path: str = None) -> FileSystemLoader:
-    """
-    Create a jinja2.FileSystemLoader object for the directory passed as
+    """Create a jinja2.FileSystemLoader object for the directory passed as
     template_dir_path.
 
     This loader is used by Jinja to open .j2 template files.
     """
-
     if not template_dir_path:
         log.debug("template_dir_path value empty. Skipping.")
         pass
@@ -23,13 +22,11 @@ def load_template_dir(template_dir_path: str = None) -> FileSystemLoader:
 
 
 def create_loader_env(_loader: FileSystemLoader = None) -> Environment:
-    """
-    Create a jinja2.Environment object for the Jinja template loader object passed
+    """Create a jinja2.Environment object for the Jinja template loader object passed
     as _loader.
 
     The environment is used to pass data and output a templated file.
     """
-
     if not _loader:
         log.debug(f"_loader value empty. Skipping.")
 
